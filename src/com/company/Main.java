@@ -47,6 +47,6 @@ public class Main {
         Matrix observation = new Matrix(observationAsString);
         // System.err.println(observation);
         AlphaPass a = new AlphaPass(transition, emission, pi, observation);
-
+        //g
     }
 }
