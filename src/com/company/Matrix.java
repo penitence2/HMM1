@@ -119,11 +119,23 @@ class Matrix {
         for (int i = 0; i < this.getnRows(); i++) {
             for (int j = 0; j < this.getnColumns(); j++) {
                 if (this.mAsArray[i][j] > max)
-                        max = this.mAsArray[i][j];
+                    max = this.mAsArray[i][j];
             }
         }
         return max;
     }
+
+    public Double sum()
+    {
+        Double sum = 0.0;
+        for (int i = 0; i < this.getnRows(); i++) {
+            for (int j = 0; j < this.getnColumns(); j++) {
+                    sum += this.mAsArray[i][j];
+            }
+        }
+        return sum;
+    }
+
     @Override
     public String toString() {
         String result = new String();

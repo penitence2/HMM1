@@ -20,7 +20,8 @@ public class AlphaPass {
         this.observations = observations;
         // System.err.println(this);
         // System.err.println("ans " + calculateAlphaI(observations.getnColumns()));
-        System.out.println(calculateAlphaI(observations.getnColumns()).max());
+        Matrix alphaT = calculateAlphaI(observations.getnColumns());
+        System.out.println(String.format("%.5g%n",alphaT.sum()));
     }
 
     @Override

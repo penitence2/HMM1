@@ -43,6 +43,8 @@ public class Main {
 
         // Here we choose to work on emission as an array and not a matrix for convenience.
         String observationAsString = scanner.nextLine();
+        // Little trick so observation can be easily considered as matrix
+        // the "1 " need to be understood as 1 row
         observationAsString = "1 " + observationAsString;
         Matrix observation = new Matrix(observationAsString);
         // System.err.println(observation);
