@@ -30,7 +30,6 @@ class Matrix {
 
     Matrix (String mAsString) throws  Exception
     {
-
         String[] stringValues;
         stringValues = mAsString.split(" ");
         int sizeMatrixRow = Integer.valueOf(stringValues[0]);
@@ -125,6 +124,26 @@ class Matrix {
         return max;
     }
 
+    public Integer[] maxIndex()
+    {
+        int maxRow = 0;
+        int maxColumn = 0;
+        Integer[] answer = new Integer[2];
+        double max = 0;
+        for (int i = 0; i < this.getnRows(); i++) {
+            for (int j = 0; j < this.getnColumns(); j++) {
+                if (this.mAsArray[i][j] > max) {
+                    max = this.mAsArray[i][j];
+                    maxRow = i;
+                    maxColumn = j;
+                }
+            }
+        }
+        answer[0] = maxRow;
+        answer[1] = maxColumn;
+        return answer;
+    }
+
     public Double sum()
     {
         Double sum = 0.0;
@@ -134,6 +153,47 @@ class Matrix {
             }
         }
         return sum;
+    }
+    /*  NOT TESTED*/
+    public Matrix addOneColumn(Matrix newColumn)
+    {
+        Double[][] newMAsArray = new Double[this.getnRows()][(this.getnColumns() + 1)];
+        for (int i = 0; i < this.getnRows(); i++) {
+            for (int j = 0; j < this.getnColumns(); j++) {
+                newMAsArray[i][j] = this.mAsArray[i][j];
+            }
+            newMAsArray[i][this.getnColumns()] =  newColumn.getElement(i,0);
+        }
+        mAsArray = newMAsArray;
+        return this;
+    }
+
+    public Matrix addOnerow(Matrix newRow)
+    {
+        Double[][] newMAsArray = new Double[this.getnRows() + 1][(this.getnColumns())];
+        for (int i = 0; i < this.getnRows(); i++) {
+            for (int j = 0; j < this.getnColumns(); j++) {
+                newMAsArray[i][j] = this.mAsArray[i][j];
+            }
+        }
+        for (int j = 0; j < this.getnColumns(); j++) {
+            newMAsArray[this.getnRows()][j] = newRow.getElement(0,j);
+        }
+        mAsArray = newMAsArray;
+        return this;
+    }
+
+    public Matrix addOneNumber(double number) throws Exception
+    {
+        if(this.getnRows() !=1 )
+            throw new Exception("The matrix must have only one row");
+        Double[][] newMAsArray = new Double[this.getnRows()][(this.getnColumns() + 1)];
+        for (int j = 0; j < this.getnColumns(); j++) {
+            newMAsArray[0][j] = this.mAsArray[0][j];
+        }
+        newMAsArray[0][this.getnColumns()] = number;
+        mAsArray = newMAsArray;
+        return this;
     }
 
     @Override

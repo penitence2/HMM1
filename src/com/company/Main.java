@@ -10,7 +10,7 @@ public class Main {
         HMM2();
     }
 
-    public static void HMM1() throws java.lang.Exception
+    public static void HMM0() throws java.lang.Exception
     {
         Scanner scanner = new Scanner(System.in);
 
@@ -28,7 +28,7 @@ public class Main {
         System.out.println(result.getnRows() + " " + result.getnColumns() + " " +  result);
     }
 
-    public static void HMM2() throws java.lang.Exception
+    public static void HMM1() throws java.lang.Exception
     {
         Scanner scanner = new Scanner(System.in);
 
@@ -50,5 +50,29 @@ public class Main {
         // System.err.println(observation);
         AlphaPass a = new AlphaPass(transition, emission, pi, observation);
         //g
+    }
+
+    public static void HMM2() throws java.lang.Exception
+    {
+        Scanner scanner = new Scanner(System.in);
+
+        String transitionAsString = scanner.nextLine();
+        Matrix transition = new Matrix(transitionAsString);
+
+        String emissionAsString = scanner.nextLine();
+        Matrix emission = new Matrix(emissionAsString);
+
+        String piAsString = scanner.nextLine();
+        Matrix pi = new Matrix(piAsString);
+
+        // Here we choose to work on emission as an array and not a matrix for convenience.
+        String observationAsString = scanner.nextLine();
+        // Little trick so observation can be easily considered as matrix
+        // the "1 " need to be understood as 1 row
+        observationAsString = "1 " + observationAsString;
+        Matrix observation = new Matrix(observationAsString);
+
+        Viterbi v = new Viterbi(transition, emission, pi, observation);
+
     }
 }
