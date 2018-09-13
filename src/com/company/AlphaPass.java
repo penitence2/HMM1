@@ -8,20 +8,21 @@ public class AlphaPass {
     Matrix emission;
     Matrix pi;
     Matrix observations;
-    Matrix NULL = null;
 
     Double probability = null;
 
+    Matrix alpha ;
 
     public AlphaPass(Matrix transition, Matrix emission, Matrix pi, Matrix observations)throws Exception {
         this.transition = transition;
         this.emission = emission;
         this.pi = pi;
         this.observations = observations;
+        alpha = Matrix.createEmptyMatrix(this.observations.getnColumns(), this.emission.getnRows());
         // System.err.println(this);
         // System.err.println("ans " + calculateAlphaI(observations.getnColumns()));
         Matrix alphaT = calculateAlphaI(observations.getnColumns());
-        System.out.println(String.format("%.5g%n",alphaT.sum()));
+        // System.out.println(String.format("%.5g%n",alphaT.sum()));
     }
 
     @Override
@@ -61,7 +62,7 @@ public class AlphaPass {
        {
            alphaT[0][i] = b_ot.selectRow(i).getElement(0,0) * pi.selectColumn(i).getElement(0,0);
        }
-
+       this.alpha.setRow(0, alphaT);
        return alphaT;
    }
 
@@ -85,6 +86,7 @@ public class AlphaPass {
             }
             alphaT[0][i] = sum * b_ot.selectRow(i).getElement(0,0);
         }
+        this.alpha.setRow(T-1, alphaT);
         return alphaT;
     }
 }

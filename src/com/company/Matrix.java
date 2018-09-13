@@ -28,8 +28,14 @@ class Matrix {
         return mAsArray;
     }
 
-    Matrix (String mAsString) throws  Exception
+    public static Matrix createEmptyMatrix(int nrows, int ncolumn)
     {
+        Double[][] mAsArray = new Double[nrows][ncolumn];
+        return new Matrix(mAsArray);
+    }
+
+    Matrix (String mAsString) throws  Exception
+        {
         String[] stringValues;
         stringValues = mAsString.split(" ");
         int sizeMatrixRow = Integer.valueOf(stringValues[0]);
@@ -194,6 +200,48 @@ class Matrix {
         newMAsArray[0][this.getnColumns()] = number;
         mAsArray = newMAsArray;
         return this;
+    }
+
+    public String asOutput(){
+        String result = String.valueOf(this.getnRows());
+        result += " ";
+        result += String.valueOf(this.getnColumns());
+        result += " ";
+        for (int i = 0; i < this.getnRows(); i++) {
+            for (int j = 0; j < this.getnColumns(); j++) {
+                result += (this.mAsArray[i][j] + " ");
+            }
+        }
+        return result;
+    }
+
+    public Matrix setRow(int numberOfRow, Matrix m)
+    {
+        setRow(numberOfRow, m.mAsArray);
+        return this;
+    }
+
+    public  Matrix setRow(int numberOfRow, Double[][] mAsArray)
+    {
+        for (int i = 0; i < this.getnColumns(); i++)
+        {
+            this.mAsArray[numberOfRow][i] = mAsArray[0][i];
+        }
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof Matrix))
+            return false;
+        Matrix m = (Matrix) obj;
+        for (int i = 0; i < this.getnRows(); i++) {
+            for (int j = 0; j < this.getnColumns(); j++) {
+                if(this.mAsArray[i][j].equals(m.mAsArray[i][j]))
+                    return false;
+            }
+        }
+        return true;
     }
 
     @Override
