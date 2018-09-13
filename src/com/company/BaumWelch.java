@@ -14,7 +14,7 @@ class BaumWelch {
     int numberOfState;
     Double[][][] diGamma;
     Double[][] gamma ;
-
+    Double[] scaling;
 
     public BaumWelch(Matrix transition, Matrix emission, Matrix pi, Matrix observations) throws Exception {
         this.transition = transition;
@@ -25,21 +25,32 @@ class BaumWelch {
         this.numberOfState = transition.getnColumns();
         this.gamma = new Double[numberOfObservation][numberOfState];
         this.diGamma = new Double[numberOfObservation][numberOfState][numberOfState];
-        for (int i = 0 ; i < 10 ;i++) {
+        double oldLogProb;
+        double logProb = 0;
+        int i =0;
+        do {
+            System.err.println(i);
+            oldLogProb = logProb;
             alphaPass = new AlphaPass(this.transition, this.emission, this.pi, this.observations);
-            betaPass = new BetaPass(this.transition, this.emission, this.pi, this.observations);
+            betaPass = new BetaPass(this.transition, this.emission, this.pi, this.observations, alphaPass.scaling);
+            this.scaling = alphaPass.scaling;
             calculateGamma();
             reEstimateLambda();
-            System.out.println(this.transition.asOutput());
-            System.out.println(this.emission.asOutput());
-            System.out.println(this.pi);
-        }
+            logProb = computelogProb();
+        //System.err.println(betaPass.beta);
+              System.out.println(this.transition.asOutput());
+              System.out.println(this.emission.asOutput());
+//            System.out.println(this.pi);
+        }while (i++ < 1 || logProb > oldLogProb);
+
+
 
 
     }
     private void calculateGamma()
     {
         double denum;
+        System.err.println("to del");
         for(int t = 0; t< this.numberOfObservation - 1 ;t++)
         {
             denum = 0;
@@ -163,7 +174,14 @@ class BaumWelch {
     }
 
 
-
+    public double computelogProb()
+    {
+        double logProb = 0;
+        for (int i=0; i< this.numberOfObservation;i++){
+            logProb += Math.log(this.scaling[i]);
+        }
+        return -logProb;
+    }
 
 
 }

@@ -8,7 +8,7 @@ public class AlphaPass {
     Matrix emission;
     Matrix pi;
     Matrix observations;
-
+    Double[] scaling;
     Double probability = null;
 
     Matrix alpha ;
@@ -21,6 +21,7 @@ public class AlphaPass {
         alpha = Matrix.createEmptyMatrix(this.observations.getnColumns(), this.emission.getnRows());
         // System.err.println(this);
         // System.err.println("ans " + calculateAlphaI(observations.getnColumns()));
+        this.scaling = new Double[this.observations.getnColumns()];
         Matrix alphaT = calculateAlphaI(observations.getnColumns());
         // System.out.println(String.format("%.5g%n",alphaT.sum()));
     }
@@ -56,11 +57,18 @@ public class AlphaPass {
        // System.err.println("debut " + T);
        Double[][] alphaT = new Double[1][this.pi.getnColumns()];
        Matrix b_ot = this.emission.selectColumn(o_t);
+       this.scaling[0] = 0.0;
        int N = pi.getnColumns();
 
        for (int i = 0; i < N ; i++)
        {
            alphaT[0][i] = b_ot.selectRow(i).getElement(0,0) * pi.selectColumn(i).getElement(0,0);
+           this.scaling[0] += alphaT[0][i];
+       }
+       this.scaling[0] = 1/this.scaling[0];
+       for (int i = 0; i < N ; i++)
+       {
+           alphaT[0][i] *= this.scaling[0];
        }
        this.alpha.setRow(0, alphaT);
        return alphaT;
@@ -73,8 +81,8 @@ public class AlphaPass {
         Matrix b_ot = this.emission.selectColumn(o_t);
 
         int N = pi.getnColumns();
+        this.scaling[T - 1] = 0.0;
         Matrix previousAlpha = this.calculateAlphaI(T - 1);
-
         double sum;
 
         for (int i = 0; i < N ; i++)
@@ -85,8 +93,14 @@ public class AlphaPass {
                 sum += transition.getElement(j,i) * previousAlpha.getElement(0,j);
             }
             alphaT[0][i] = sum * b_ot.selectRow(i).getElement(0,0);
+            this.scaling[T - 1] += alphaT[0][i];
         }
-        this.alpha.setRow(T-1, alphaT);
+        this.scaling[T-1] = 1/this.scaling[T-1];
+        for (int i = 0; i < N ; i++)
+        {
+            alphaT[0][i] = alphaT[0][i] * this.scaling[T-1];
+        }
+            this.alpha.setRow(T-1, alphaT);
         return alphaT;
     }
 }
