@@ -12,38 +12,84 @@ class BaumWelch {
     boolean converging = false;
     int numberOfObservation;
     int numberOfState;
-    DiGamma diGamma;
+    Double[][][] diGamma;
     Double[][] gamma ;
 
 
-    public BaumWelch(Matrix transition, Matrix emission, Matrix pi, Matrix observations) throws Exception{
+    public BaumWelch(Matrix transition, Matrix emission, Matrix pi, Matrix observations) throws Exception {
         this.transition = transition;
         this.emission = emission;
         this.pi = pi;
         this.observations = observations;
         this.numberOfObservation = this.observations.getnColumns();
         this.numberOfState = transition.getnColumns();
-        System.err.println(numberOfObservation);
         this.gamma = new Double[numberOfObservation][numberOfState];
-            alphaPass = new AlphaPass(transition, emission, pi, observations);
-            betaPass = new BetaPass(transition, emission, pi, observations);
-            this.diGamma = new DiGamma(this.numberOfObservation, this.numberOfState, this);
-;
+        this.diGamma = new Double[numberOfObservation][numberOfState][numberOfState];
+        for (int i = 0 ; i < 10 ;i++) {
+            alphaPass = new AlphaPass(this.transition, this.emission, this.pi, this.observations);
+            betaPass = new BetaPass(this.transition, this.emission, this.pi, this.observations);
             calculateGamma();
             reEstimateLambda();
+            System.out.println(this.transition.asOutput());
+            System.out.println(this.emission.asOutput());
+            System.out.println(this.pi);
+        }
 
-        System.out.println(transition.asOutput());
-        System.out.println(emission.asOutput());
 
     }
-
     private void calculateGamma()
+    {
+        double denum;
+        for(int t = 0; t< this.numberOfObservation - 1 ;t++)
+        {
+            denum = 0;
+            int o_t = this.observations.getElement(0,t + 1).intValue();
+            Matrix b_ot = this.emission.selectColumn(o_t);
+
+            for (int i=0; i < this.numberOfState; i++)
+            {
+                for (int j=0; j < this.numberOfState; j++)
+                {
+                    double alphati =  this.alphaPass.alpha.getElement(t, i);
+                    double aij = this.transition.getElement(i,j);
+                    double bj = b_ot.selectRow(j).getElement(0,0);
+                    double betaj = this.betaPass.beta.getElement(t+1, j);
+                    denum +=  alphati * aij * bj * betaj;
+
+                }
+            }
+            for (int i=0; i < this.numberOfState; i++)
+            {
+                this.gamma[t][i] = 0.0;
+                for (int j=0; j < this.numberOfState; j++) {
+                    double alphati =  this.alphaPass.alpha.getElement(t, i);
+                    double aij = this.transition.getElement(i,j);
+                    double bj = b_ot.selectRow(j).getElement(0,0);
+                    double betaj = this.betaPass.beta.getElement(t+1, j);
+                    this.diGamma[t][i][j] = alphati * aij * bj * betaj /denum;
+                    this.gamma[t][i] += this.diGamma[t][i][j];
+                }
+            }
+        }
+        //special cae for T -1
+        denum = 0;
+        for (int i=0; i < this.numberOfState; i++)
+        {
+            denum = denum + this.alphaPass.alpha.getElement(this.numberOfObservation - 1, i);
+        }
+        for (int i=0; i < this.numberOfState; i++)
+        {
+            this.gamma[this.numberOfObservation - 1][i] =
+                    this.alphaPass.alpha.getElement(this.numberOfObservation - 1, i) / denum;
+        }
+    }
+    private void calculateGamma2()
     {
         for (int t = 0; t < this.numberOfObservation; t++)
         {
             for (int i = 0; i <this.numberOfState; i++)
             {
-                this.gamma[t][i] = diGamma.sum(t, i);
+                // this.gamma[t][i] = diGamma.sum(t, i);
             }
         }
     }
@@ -52,17 +98,28 @@ class BaumWelch {
     {
         Matrix newTransition = estimateTransition();
         Matrix newEmission = estimateEmission();
+        Matrix newPi = estimatePi();
+
         if (newTransition.equals(this.transition) && newEmission.equals(this.emission))
         {
             this.converging = true;
         }
-        else
-        {
+        else {
             this.transition = newTransition;
-            this.observations = newEmission;
+            this.emission = newEmission;
+            this.pi = newPi;
         }
 
     }
+
+    private Matrix estimatePi()
+    {
+        Double[][] newPi = new Double[this.pi.getnRows()][this.pi.getnColumns()];
+        for (int i = 0 ; i < this.pi.getnColumns();i++)
+            newPi[0][i] = gamma[0][i];
+        return new Matrix(newPi);
+    }
+
     private Matrix estimateTransition()
     {
         Double[][] newTransition = new Double[this.numberOfState][this.numberOfState];
@@ -73,7 +130,7 @@ class BaumWelch {
                 double denum = 0.0;
                 for (int t = 0; t < this.numberOfObservation - 1; t++)
                 {
-                    num += diGamma.getElement(t,i,j);
+                    num += diGamma[t][i][j];
                     denum += gamma[t][i];
                 }
                 newTransition[i][j] = num/denum;
@@ -86,22 +143,27 @@ class BaumWelch {
     {
         Double[][] newEmission = new Double[this.numberOfState][this.emission.getnColumns()];
         for (int j = 0; j < this.numberOfState; j++)
+        {
             for (int k = 0; k < this.emission.getnColumns() ; k++)
             {
                 double denum = 0;
+                double num = 0;
                 for (int t = 0; t < this.numberOfObservation - 1; t++)
                 {
-                    double num = 0;
                     denum += gamma[t][j];
                     if (k == this.observations.getElement(0,t))
                     {
                         num += gamma[t][j];
                     }
-                    newEmission[j][k] = num/denum;
                 }
+                newEmission[j][k] = num/denum;
             }
+        }
         return new Matrix(newEmission);
     }
+
+
+
 
 
 }

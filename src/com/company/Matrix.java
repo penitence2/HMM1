@@ -237,7 +237,7 @@ class Matrix {
         Matrix m = (Matrix) obj;
         for (int i = 0; i < this.getnRows(); i++) {
             for (int j = 0; j < this.getnColumns(); j++) {
-                if(this.mAsArray[i][j].equals(m.mAsArray[i][j]))
+                if(!this.mAsArray[i][j].equals(m.mAsArray[i][j]))
                     return false;
             }
         }

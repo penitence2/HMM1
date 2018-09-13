@@ -105,10 +105,8 @@ public class Main {
 //        AlphaPass alphaPass = new AlphaPass(transition, emission, pi, observation);
 
 
-       BaumWelch  b = new BaumWelch(transition, emission, pi, observation);
-        System.out.println("g");
-        System.out.println(new Matrix( b.gamma));
-        System.out.println("g");
+        BaumWelch  b = new BaumWelch(transition, emission, pi, observation);
+
 
 
     }
