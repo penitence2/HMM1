@@ -104,7 +104,6 @@ class BaumWelch {
                 for (int j=0; j < this.numberOfState; j++) {
                     double alphati =  this.alphaPass.alpha.getElement(t, i);
                     double aij = this.transition.getElement(i,j);
-                    //double bj = b_ot.selectRow(j).getElement(0,0);
                     double bj = this.emission.getElement(j,o_t);
                     double betaj = this.betaPass.beta[t+1][j];
                     this.diGamma[t][i][j] = alphati * aij * bj * betaj /denum;

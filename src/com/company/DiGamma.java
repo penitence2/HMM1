@@ -13,13 +13,12 @@ public class DiGamma {
         for(int t = 0; t < numberOfObservation - 2; t++)
         {
             int o_t = b.observations.getElement(0,t ).intValue();
-            Matrix b_ot = b.emission.selectColumn(o_t);
             for (int i = 0; i < numberOfState; i++)
             {
                 for (int j = 0; j < numberOfState; j++) {
                     double alphati = b.alphaPass.alpha.getElement(t, j);
                     double  aij = b.transition.getElement(i,j);
-                    double bj = b_ot.selectRow(j).getElement(0,0);
+                    double bj = b.emission.getElement(j,o_t);
                     double betaj = b.betaPass.beta[t + 1][j];
                     double num = alphati * aij * bj * betaj;
                      denum = 0;

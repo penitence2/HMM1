@@ -26,6 +26,7 @@ public class BetaPass {
 
         for(int i = numberOfObservation - 1; i >0 ; i-- )
             beta.setRow( i - 1, calculateBetaI(i));
+
     }
 
     private Matrix calculateBetaI(int T) throws Exception

@@ -55,13 +55,12 @@ public class AlphaPass {
        int o_t = this.observations.getElement(0,0).intValue();
        // System.err.println("debut " + T);
        Double[][] alphaT = new Double[1][this.pi.getnColumns()];
-       Matrix b_ot = this.emission.selectColumn(o_t);
        this.scaling[0] = 0.0;
        int N = pi.getnColumns();
 
        for (int i = 0; i < N ; i++)
        {
-           alphaT[0][i] = b_ot.selectRow(i).getElement(0,0) * pi.selectColumn(i).getElement(0,0);
+           alphaT[0][i] = this.emission.getElement(i,o_t) * pi.getElement(0,i);
            this.scaling[0] += alphaT[0][i];
        }
        this.scaling[0] = 1/this.scaling[0];
@@ -77,7 +76,6 @@ public class AlphaPass {
     {
         int o_t = this.observations.getElement(0,T-1).intValue();
         Double[][] alphaT = new Double[1][this.pi.getnColumns()];
-        Matrix b_ot = this.emission.selectColumn(o_t);
 
         int N = pi.getnColumns();
         this.scaling[T - 1] = 0.0;
@@ -91,7 +89,7 @@ public class AlphaPass {
             {
                 sum += transition.getElement(j,i) * previousAlpha.getElement(0,j);
             }
-            alphaT[0][i] = sum * b_ot.selectRow(i).getElement(0,0);
+            alphaT[0][i] = sum * this.emission.getElement(i,o_t);
             this.scaling[T - 1] += alphaT[0][i];
         }
         this.scaling[T-1] = 1/this.scaling[T-1];
