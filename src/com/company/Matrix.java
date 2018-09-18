@@ -4,7 +4,7 @@ package com.company;
 import java.util.Arrays;
 
 class Matrix {
-    private Double[][] mAsArray;
+    public Double[][] mAsArray;
 
     public int getnRows() {
         return mAsArray.length;
@@ -35,7 +35,7 @@ class Matrix {
     }
 
     Matrix (String mAsString) throws  Exception
-        {
+    {
         String[] stringValues;
         stringValues = mAsString.split(" ");
         int sizeMatrixRow = Integer.valueOf(stringValues[0]);
@@ -45,8 +45,30 @@ class Matrix {
         for (String value: Arrays.copyOfRange(stringValues,2,sizeMatrixRow * sizeMatrixColumn + 2)) {
             values[i++] = (Double.valueOf(value));
         }
-
         this.mAsArray = this.createMatrix(sizeMatrixRow, sizeMatrixColumn, values);
+
+    }
+
+    public void Matrix2 (String mAsString) throws  Exception {
+        String[] stringValues;
+        stringValues = mAsString.split(" ");
+        int sizeMatrixRow = Integer.valueOf(stringValues[0]);
+        int sizeMatrixColumn = Integer.valueOf(stringValues[1]);
+        Double[] values = new Double[sizeMatrixRow * sizeMatrixColumn];
+        int j = 0;
+        String number = "";
+        for (int i = 0; i < mAsString.length(); i++) {
+            if (mAsString.charAt(i) == ' ') {
+                if (j >= 2) {
+                    values[j - 2] = Double.valueOf(number);
+                }
+                j++;
+                number = "";
+            } else
+                number += mAsString.charAt(i);
+
+
+        }
     }
 
     Matrix( Double[][] mAsArray)
