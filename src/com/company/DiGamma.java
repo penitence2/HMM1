@@ -20,7 +20,7 @@ public class DiGamma {
                     double alphati = b.alphaPass.alpha.getElement(t, j);
                     double  aij = b.transition.getElement(i,j);
                     double bj = b_ot.selectRow(j).getElement(0,0);
-                    double betaj = b.betaPass.beta.getElement(t + 1 , j);
+                    double betaj = b.betaPass.beta[t + 1][j];
                     double num = alphati * aij * bj * betaj;
                      denum = 0;
                     for (int k = 0; k < b.numberOfState; k++)

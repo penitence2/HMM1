@@ -9,7 +9,6 @@ public class AlphaPass {
     Matrix pi;
     Matrix observations;
     Double[] scaling;
-    Double probability = null;
 
     Matrix alpha ;
 

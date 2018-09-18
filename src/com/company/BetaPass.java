@@ -26,7 +26,6 @@ public class BetaPass {
 
         for(int i = numberOfObservation - 1; i >0 ; i-- )
             beta.setRow( i - 1, calculateBetaI(i));
-
     }
 
     private Matrix calculateBetaI(int T) throws Exception
@@ -48,7 +47,7 @@ public class BetaPass {
     {
         Double[][] b_t = new Double[1][this.numberOfState];
         for (int i = 0; i < this.numberOfState; i++) {
-            b_t[0][i] = 1.0 * this.scaling[this.numberOfState - 1];
+            b_t[0][i] = 1.0 * this.scaling[this.numberOfObservation - 1];
         }
         return  b_t;
 
@@ -56,7 +55,7 @@ public class BetaPass {
     private Double[][] recurrentCase(int T) throws Exception
     {
         int o_t = this.observations.getElement(0,T + 1).intValue();
-        Matrix b_ot = this.emission.selectColumn(o_t);
+        //Matrix b_ot = this.emission.selectColumn(o_t);
 
         Double[][] beta_t = new Double[1][this.numberOfState];
         double aij;
@@ -68,7 +67,8 @@ public class BetaPass {
             for (int j = 0; j < this.numberOfState; j++)
             {
                 aij = transition.getElement(j,i);
-                bj = b_ot.selectRow(j).getElement(0,0);
+                //bj = b_ot.selectRow(j).getElement(0,0);
+                bj = this.emission.getElement(j,o_t);
                 betaj = this.beta.getElement(T + 1, j);
                 beta_t[0][i] += aij * bj * betaj;
             }

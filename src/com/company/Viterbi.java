@@ -17,6 +17,8 @@ public class Viterbi {
         this.observations = observations;
         calculateDeltaT(this.observations.getnColumns());
         int[] result = findMostLikelySequence(this.observations.getnColumns());
+        System.err.println(delta);
+        System.err.println(deltaIdx);
 
         for (int el:result)
         {

@@ -9,7 +9,7 @@ public class Main {
         // HMM0();
         // HMM1();
         // HMM2();
-        HMM3();
+         HMM3();
     }
 
     public static void HMM0() throws java.lang.Exception
@@ -103,7 +103,6 @@ public class Main {
         // BaumWelch b = new BaumWelch(transition, emission, pi, observation);
 //        BetaPass betaPass = new BetaPass(transition, emission, pi, observation);
 //        AlphaPass alphaPass = new AlphaPass(transition, emission, pi, observation);
-
 
         BaumWelch  b = new BaumWelch(transition, emission, pi, observation);
 
