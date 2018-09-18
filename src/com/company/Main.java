@@ -82,7 +82,6 @@ public class Main {
     }
 
     public static void HMM3() throws java.lang.Exception {
-        long startTimeGlob = System.nanoTime();
         Scanner scanner = new Scanner(System.in);
 
         String transitionAsString = scanner.nextLine();
@@ -102,29 +101,13 @@ public class Main {
         String observationAsString = "1 ";
         observationAsString += scanner.nextLine();
         Matrix observation = new Matrix(observationAsString);
-        long testTime = System.nanoTime();
-        double j= 0;
-        for (int i = 0; i<10000000; i++)
-        {
-            j = observation.getElement(0,5);
-        }
 
-        testTime = System.nanoTime();
-
-        for (int i = 0; i<10000000; i++)
-        {
-            j = observation.mAsArray[0][5];
-        }
 
 
         // BaumWelch b = new BaumWelch(transition, emission, pi, observation);
 //        BetaPass betaPass = new BetaPass(transition, emission, pi, observation);
 //        AlphaPass alphaPass = new AlphaPass(transition, emission, pi, observation);
-        long timeBaumWelch = System.nanoTime();
         BaumWelch  b = new BaumWelch(transition, emission, pi, observation);
-        long endTimeGlobal = System.nanoTime();
-        System.err.println("Baum welch time" + (endTimeGlobal - timeBaumWelch )/ 1000000);
-        System.err.println("Total time" + (endTimeGlobal - startTimeGlob )/ 1000000);
 
 
 
